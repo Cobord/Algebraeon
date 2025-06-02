@@ -1,4 +1,3 @@
-use std::marker::PhantomData;
 use super::{
     finitely_free_affine::FinitelyFreeSubmoduleAffineSubsetStructure,
     finitely_free_coset::FinitelyFreeSubmoduleCosetStructure,
@@ -7,6 +6,7 @@ use super::{
 };
 use crate::{linear::matrix::MatrixStructure, structure::*};
 use algebraeon_sets::structure::*;
+use std::marker::PhantomData;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FinitelyFreeModuleStructure<Ring: RingSignature, RingB: BorrowedStructure<Ring>> {

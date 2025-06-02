@@ -65,6 +65,7 @@ impl PolynomialPlot {
         Self { coeffs }
     }
 
+    #[allow(clippy::needless_raw_string_hashes, clippy::useless_format)]
     pub fn make_shader(&self) -> String {
         let n = self.coeffs.len();
         String::from(include_str!("shader.wgsl")).replace(
@@ -84,6 +85,7 @@ impl PolynomialPlot {
                     n => {
                         let n2 = n - 2;
                         let n1 = n - 1;
+                        #[allow(clippy::unnecessary_join)]
                         let wgsl_coeffs = self
                             .coeffs
                             .iter()
@@ -218,7 +220,7 @@ impl Canvas2DItemWgpu for PolynomialWgpu {
         let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("Render Pass"),
             color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                view: view,
+                view,
                 resolve_target: None,
                 ops: wgpu::Operations {
                     load: wgpu::LoadOp::Clear(wgpu::Color {

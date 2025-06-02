@@ -1,4 +1,5 @@
 use std::{cell::OnceCell, sync::Arc};
+use wgpu::MemoryHints;
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
@@ -41,7 +42,7 @@ impl WgpuState {
             required_features: wgpu::Features::empty(),
             required_limits: wgpu::Limits::default(),
             label: None,
-            memory_hints: Default::default(),
+            memory_hints: MemoryHints::default(),
             trace: wgpu::Trace::Off,
         }))
         .unwrap();

@@ -26,23 +26,23 @@ impl Vertex {
 
 const VERTICES: &[Vertex] = &[
     Vertex {
-        position: [-0.0868241, 0.49240386],
+        position: [-0.086_824_1, 0.492_403_86],
         color: [0.5, 0.0, 0.5],
     }, // A
     Vertex {
-        position: [-0.49513406, 0.06958647],
+        position: [-0.495_134_06, 0.069_586_47],
         color: [0.5, 0.5, 0.5],
     }, // B
     Vertex {
-        position: [-0.21918549, -0.44939706],
+        position: [-0.219_185_49, -0.449_397_06],
         color: [0.5, 0.0, 0.5],
     }, // C
     Vertex {
-        position: [0.35966998, -0.3473291],
+        position: [0.359_669_98, -0.347_329_1],
         color: [0.5, 0.0, 0.5],
     }, // D
     Vertex {
-        position: [0.44147372, 0.2347359],
+        position: [0.441_473_72, 0.234_735_9],
         color: [0.5, 0.0, 0.5],
     }, // E
 ];
@@ -60,6 +60,7 @@ struct PentagonWgpu {
 pub struct Pentagon {}
 
 impl Pentagon {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self {}
     }
@@ -175,7 +176,7 @@ impl Canvas2DItemWgpu for PentagonWgpu {
         let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("Render Pass"),
             color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                view: view,
+                view,
                 resolve_target: None,
                 ops: wgpu::Operations {
                     load: wgpu::LoadOp::Load,

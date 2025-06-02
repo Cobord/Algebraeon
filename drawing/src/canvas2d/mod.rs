@@ -42,8 +42,8 @@ pub trait Camera {
         pixels: PhysicalPosition<f64>,
     ) -> (f64, f64) {
         (
-            2.0 * pixels.x as f64 / display_size.width as f64 - 1.0,
-            -2.0 * pixels.y as f64 / display_size.height as f64 + 1.0,
+            2.0 * pixels.x / f64::from(display_size.width) - 1.0,
+            -2.0 * pixels.y / f64::from(display_size.height) + 1.0,
         )
     }
 
@@ -53,8 +53,8 @@ pub trait Camera {
         wgpu: (f64, f64),
     ) -> PhysicalPosition<f64> {
         PhysicalPosition::new(
-            display_size.width as f64 * (wgpu.0 + 1.0) / 2.0,
-            display_size.height as f64 * (-wgpu.1 + 1.0) / 2.0,
+            f64::from(display_size.width) * (wgpu.0 + 1.0) / 2.0,
+            f64::from(display_size.height) * (-wgpu.1 + 1.0) / 2.0,
         )
     }
 
@@ -62,12 +62,12 @@ pub trait Camera {
         let uniform = self.get_uniform(display_size);
         let [[a, b], [c, d]] = mat2x2inv(uniform.matrix);
         let v = (
-            wgpu.0 - uniform.shift[0] as f64,
-            wgpu.1 - uniform.shift[1] as f64,
+            wgpu.0 - f64::from(uniform.shift[0]),
+            wgpu.1 - f64::from(uniform.shift[1]),
         );
         (
-            a as f64 * v.0 + b as f64 * v.1,
-            c as f64 * v.0 + d as f64 * v.1,
+            f64::from(a) * v.0 + f64::from(b) * v.1,
+            f64::from(c) * v.0 + f64::from(d) * v.1,
         )
     }
 
@@ -77,8 +77,8 @@ pub trait Camera {
         let [x, y] = uniform.shift;
         let v = coord;
         (
-            a as f64 * v.0 + b as f64 * v.1 + x as f64,
-            c as f64 * v.0 + d as f64 * v.1 + y as f64,
+            f64::from(a) * v.0 + f64::from(b) * v.1 + f64::from(x),
+            f64::from(c) * v.0 + f64::from(d) * v.1 + f64::from(y),
         )
     }
 
@@ -108,6 +108,7 @@ pub struct MouseWheelZoomCamera {
     sqrt_area: f64,
 }
 
+#[allow(clippy::new_without_default)]
 impl MouseWheelZoomCamera {
     pub fn new() -> Self {
         Self {
@@ -141,11 +142,12 @@ impl Camera for MouseWheelZoomCamera {
         _id: WindowId,
         event: &WindowEvent,
     ) {
+        #[allow(clippy::single_match)]
         match event {
             WindowEvent::MouseWheel { delta, .. } => {
                 let dy = match delta {
                     winit::event::MouseScrollDelta::PixelDelta(pos) => pos.y,
-                    winit::event::MouseScrollDelta::LineDelta(_x, y) => *y as f64,
+                    winit::event::MouseScrollDelta::LineDelta(_x, y) => f64::from(*y),
                 };
                 self.zoom_event(display_size, mouse_pos, 0.8f64.powf(dy));
             }
@@ -186,6 +188,7 @@ pub trait Canvas2DItemWgpu {
 }
 
 pub trait Canvas2DItem {
+    #[allow(clippy::new_ret_no_self)]
     fn new(
         &self,
         wgpu_state: &WgpuState,
@@ -321,6 +324,7 @@ impl Canvas for Canvas2D {
             &event,
         );
 
+        #[allow(clippy::single_match)]
         match event {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
@@ -344,7 +348,7 @@ impl Canvas for Canvas2D {
 
                     // This happens when the a frame takes too long to present
                     Err(wgpu::SurfaceError::Timeout) => {
-                        log::warn!("Surface timeout")
+                        log::warn!("Surface timeout");
                     }
                 }
                 window_state.wgpu_state.window.request_redraw();
